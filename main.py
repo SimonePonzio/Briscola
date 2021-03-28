@@ -38,7 +38,8 @@ class deck:
         random.shuffle(self.deck_card)
     
     def draw_card(self):
-        return self.deck_card.pop()
+        if self.deck_size()>0:
+            return self.deck_card.pop()
 
     def appen_card(self, card):
         self.deck_card.append(card)
@@ -58,9 +59,9 @@ class player:
         self.game_leader = False
         self.pl_points = 0
 
-    def draw_card(self, deck):
+    def draw_card(self, new_card):
         if len(self.pl_card) < 3:
-            self.pl_card.append(deck.draw_card())
+            self.pl_card.append(new_card)
             return 1
         else:
             return 0
@@ -78,6 +79,9 @@ class player:
     def play_rnd_card(self):
         random.shuffle(self.pl_card)
         return self.pl_card.pop()
+
+    def count_cards(self):
+        return len(self.pl_card)
 
     def add_points(self, points):
         self.pl_points += points
@@ -103,7 +107,10 @@ class game2player:
         random.shuffle(self.player_list)
         self.player_list[0].set_leader()
         for player in self.player_list:
-            while(player.draw_card(self.game_deck)): continue
+            if player.count_cards() < 3:
+                new_card = self.game_deck.draw_card()
+                player.draw_card(new_card)
+            else: continue
         # get the briscola suit
         briscola_card = self.game_deck.draw_card()
         self.briscola_suit = briscola_card.seed
@@ -114,7 +121,13 @@ class game2player:
     def play_turn(self):
         card_trick = []
         for player in self.player_list:
-            while(player.draw_card(self.game_deck)): continue
+            if player.count_cards() < 3:
+                if self.game_deck.deck_size() > 0:
+                    new_card = self.game_deck.draw_card()
+                    player.draw_card(new_card)
+            else:
+                print("Error: Player started the turn with 3 cards")
+                return 0
             played_card = player.play_rnd_card()
             card_trick.append(played_card)
             # print the cards
@@ -144,11 +157,17 @@ class game2player:
 
     def run_game(self):
         turn = 0
-        while self.game_deck.deck_size() > 0:
+        while self.player_list[0].count_cards() > 0:
             turn += 1
-            print("TURN NUMBER "+str(turn)+" briscola is: "+self.briscola_suit)
+            print("TURN NUMBER "+str(turn)+" briscola is: "+self.briscola_suit+" deck size: "+str(self.game_deck.deck_size()))
             self.play_turn()
             print("-------------------------\n")
+        # check if the points sum is 120:
+        tot_points = 0
+        for player_i in self.player_list:
+            tot_points += player_i.get_points()
+        if tot_points != 120:
+            print("Error: total points is too high: "+str(tot_points))
         # the winner is...
         if self.player_list[0].pl_points > self.player_list[1].pl_points:
             print("player_"+str(self.player_list[0].player_id)+" win the game with "+str(self.player_list[0].pl_points)+ " points!")
