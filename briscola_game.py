@@ -85,6 +85,9 @@ class game2player:
             print("player_"+str(self.player_list[0].player_id)+" win the game with "+str(self.player_list[0].pl_points)+ " points!")
         else:
             print("player_"+str(self.player_list[1].player_id)+" win the game with "+str(self.player_list[1].pl_points)+ " points!")
+        # returning winner player number
+        if self.player_list[0].pl_points > self.player_list[1].pl_points: return 0
+        else: return 1
 
     def print_game(self):
         print("The briscola suit is: "+self.briscola_suit)

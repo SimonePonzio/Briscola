@@ -2,6 +2,7 @@
 
 import random
 
+# need to add information on the briscola suit
 class player:
     def __init__(self, pl_id):
         self.player_id = pl_id
@@ -29,6 +30,9 @@ class player:
     def play_rnd_card(self):
         random.shuffle(self.pl_card)
         return self.pl_card.pop()
+    
+    # def play_respond(self, card):
+
 
     def count_cards(self):
         return len(self.pl_card)
