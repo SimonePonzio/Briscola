@@ -12,14 +12,12 @@ class game2player:
             self.player_list.append(new_player)
 
     def setup_game(self):
-        print("\nShaffle the deck... \n")
         self.game_deck.shuffle_deck()
         # randomly set a player as game leader for the first turn
-        print("Randomly set a player as game leader for the first turn and distribute the cards\n\n")
         random.shuffle(self.player_list)
         self.player_list[0].set_leader()
         for player in self.player_list:
-            if player.count_cards() < 3:
+            while player.count_cards() < 3:
                 new_card = self.game_deck.draw_card()
                 player.draw_card(new_card)
             else: continue
@@ -27,23 +25,23 @@ class game2player:
         briscola_card = self.game_deck.draw_card()
         self.briscola_suit = briscola_card.seed
         # put the card at the bottom of the deck
-        self.game_deck.appen_card(briscola_card)
+        self.game_deck.append_card(briscola_card)
+        print("SETUP GAME - briscola is: "+self.briscola_suit+" deck size: "+str(self.game_deck.deck_size()))
+        print("-------------------------\n")
         
 
     def play_turn(self):
         card_trick = []
         for player in self.player_list:
             if player.count_cards() < 3:
+                print("Player_"+str(player.player_id)+" is playing with "+str(player.count_cards())+" cards and draw a card")
                 if self.game_deck.deck_size() > 0:
                     new_card = self.game_deck.draw_card()
                     player.draw_card(new_card)
-            else:
-                print("Error: Player started the turn with 3 cards")
-                return 0
-            played_card = player.play_rnd_card()
+            played_card = player.play_rnd_card(card_trick)
             card_trick.append(played_card)
             # print the cards
-            print("Player_"+str(player.player_id)+" is playing:")
+            print("Player_"+str(player.player_id)+" is playing with "+str(player.count_cards())+" cards")
             played_card.print_card()
         # check if only 2 cards have been played
         if len(card_trick) != 2: return 0
@@ -69,6 +67,7 @@ class game2player:
 
     def run_game(self):
         turn = 0
+        print("--------- START GAME ---------\n")
         while self.player_list[0].count_cards() > 0:
             turn += 1
             print("TURN NUMBER "+str(turn)+" briscola is: "+self.briscola_suit+" deck size: "+str(self.game_deck.deck_size()))

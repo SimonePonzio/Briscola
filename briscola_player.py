@@ -27,7 +27,7 @@ class player:
 
     def set_normal(self): self.game_leader = False
 
-    def play_rnd_card(self):
+    def play_rnd_card(self, card_list):
         random.shuffle(self.pl_card)
         return self.pl_card.pop()
     

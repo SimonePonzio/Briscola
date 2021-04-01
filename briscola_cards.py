@@ -41,7 +41,7 @@ class deck:
         if self.deck_size()>0:
             return self.deck_card.pop()
 
-    def appen_card(self, card):
+    def append_card(self, card):
         self.deck_card.append(card)
 
     def deck_size(self):
