@@ -3,3 +3,4 @@ __pycache__
 
 # Don't track files with this name
 Dummy*
+*.pyc

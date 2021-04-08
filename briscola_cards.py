@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import random
+import logging
 
 SEEDS = ("swords", "clubs", "cups", "coins")
 RANKS =({'ID': 1 , 'name': "ACE"  , 'rank': 9, 'points': 11},
@@ -23,7 +24,7 @@ class card:
         self.points = points
 
     def print_card(self):
-        print(str(self.card_id)+" ("+self.name+") of "+self.seed+" with value "+str(self.points))
+        logging.debug(str(self.card_id)+" ("+self.name+") of "+self.seed+" with value "+str(self.points))
 
 
 class deck:

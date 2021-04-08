@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import random
+import logging
 
 # need to add information on the briscola suit
 class player:
@@ -19,7 +20,7 @@ class player:
 
     def print_player(self):
         player_string = "Player_"+str(self.player_id)+" has "+str(self.pl_points)+" and "+str(len(self.pl_card))+" cards and they are:"
-        print(player_string)
+        logging.debug(player_string)
         for pl_card in self.pl_card:
             pl_card.print_card()
 
