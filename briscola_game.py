@@ -2,12 +2,18 @@ import random
 import logging
 from briscola_cards import deck, card
 from briscola_player import player
+from briscola_stats import game_stats
 
 class game2player:
     def __init__(self):
+        # Variable to define the deck of card
         self.game_deck = deck()
+        # Variable to define the list of player
         self.player_list = []
+        # Variable for the briscola game suit
         self.briscola_suit = 'none'
+        # Variable for the game statistics
+        self.stats = game_stats(2)
         for pl_nr in range(2):
             new_player = player(pl_nr)
             self.player_list.append(new_player)
@@ -16,6 +22,8 @@ class game2player:
         self.game_deck.shuffle_deck()
         # randomly set a player as game leader for the first turn
         random.shuffle(self.player_list)
+        logging.info("player_"+str(self.player_list[0].player_id)+" start first.")
+        self.stats.set_player_order(self.player_list)
         self.player_list[0].set_leader()
         for player in self.player_list:
             while player.count_cards() < 3:
@@ -80,14 +88,20 @@ class game2player:
             tot_points += player_i.get_points()
         if tot_points != 120:
             logging.error("Error: total points is too high: "+str(tot_points))
-        # the winner is...
-        if self.player_list[0].pl_points > self.player_list[1].pl_points:
-            logging.info("player_"+str(self.player_list[0].player_id)+" win the game with "+str(self.player_list[0].pl_points)+ " points!")
-        else:
-            logging.info("player_"+str(self.player_list[1].player_id)+" win the game with "+str(self.player_list[1].pl_points)+ " points!")
+        self.stats.set_player_scores(self.player_list)
         # returning winner player number
-        if self.player_list[0].pl_points > self.player_list[1].pl_points: return 0
-        else: return 1
+        if   self.player_list[0].pl_points > self.player_list[1].pl_points:
+            logging.info("player_"+str(self.player_list[0].player_id)+" win the game with "+str(self.player_list[0].pl_points)+ " points!") 
+            self.stats.set_winning_player_id(self.player_list[0].player_id)
+        elif self.player_list[1].pl_points > self.player_list[0].pl_points:
+            logging.info("player_"+str(self.player_list[1].player_id)+" win the game with "+str(self.player_list[1].pl_points)+ " points!")
+            self.stats.set_winning_player_id(self.player_list[1].player_id)
+        else:
+            logging.info("the game ended in a draw")
+            self.stats.set_draw()
+
+    def get_stats(self):
+        return self.stats
 
     def print_game(self):
         print("The briscola suit is: "+self.briscola_suit)
