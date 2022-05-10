@@ -23,7 +23,7 @@ class game2player:
         # randomly set a player as game leader for the first turn
         random.shuffle(self.player_list)
         logging.info("player_"+str(self.player_list[0].player_id)+" start first.")
-        self.stats.set_player_order(self.player_list)
+        self.stats.set_start_player(self.player_list)
         self.player_list[0].set_leader()
         for player in self.player_list:
             while player.count_cards() < 3:

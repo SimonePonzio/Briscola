@@ -4,7 +4,7 @@ import random
 import argparse
 import logging
 from briscola_game import game2player
-from briscola_stats import game_stats
+from briscola_stats import game_stats, set_stats
 
 # relevant informarmations:
 # - Briscola Suit are the card with a powerful seed
@@ -31,11 +31,17 @@ def main():
     logging.basicConfig(level=args.loglevel)
     
     # run the game
-    stats = []
+    stats = set_stats()
     for _ in range(args.num_games):
         new_game = game2player()
         new_game.setup_game()
         new_game.run_game()
-        stats.append(new_game.get_stats())
+        stats.add_stat(new_game.get_stats())
+
+    print("Number of time the player 0 started: " + str(stats.get_start_plr_rate(0)*100) + "%")
+    print("Number of time the player 1 started: " + str(stats.get_start_plr_rate(1)*100) + "%")
+    print("Number of time the player 0 win    : " + str(stats.get_plr_win_rate(0)*100) + "%")
+    print("Number of time the player 1 win    : " + str(stats.get_plr_win_rate(1)*100) + "%")
+    print("Number of time the the game was a draw: " + str(stats.get_draw_rate()*100) + "%")
 
 if __name__ == '__main__': main()
