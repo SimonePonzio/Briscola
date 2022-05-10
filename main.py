@@ -5,6 +5,7 @@ import argparse
 import logging
 from briscola_game import game2player
 from briscola_stats import game_stats, set_stats
+from briscola_player import player
 
 # relevant informarmations:
 # - Briscola Suit are the card with a powerful seed
@@ -30,10 +31,18 @@ def main():
     args = parser.parse_args()    
     logging.basicConfig(level=args.loglevel)
     
-    # run the game
+    # create a container for the statistic
     stats = set_stats()
+
+    # run the game
     for _ in range(args.num_games):
         new_game = game2player()
+        # create the players
+        players = []
+        for plr_id in range(2):
+            plr = player(plr_id)
+            players.append(plr)
+        new_game.add_players(players)
         new_game.setup_game()
         new_game.run_game()
         stats.add_stat(new_game.get_stats())

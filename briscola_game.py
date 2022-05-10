@@ -14,9 +14,10 @@ class game2player:
         self.briscola_suit = 'none'
         # Variable for the game statistics
         self.stats = game_stats(2)
-        for pl_nr in range(2):
-            new_player = player(pl_nr)
-            self.player_list.append(new_player)
+
+    def add_players(self, players):
+        for plr in players:
+            self.player_list.append(plr)
 
     def setup_game(self):
         self.game_deck.shuffle_deck()
@@ -33,6 +34,8 @@ class game2player:
         # get the briscola suit
         briscola_card = self.game_deck.draw_card()
         self.briscola_suit = briscola_card.seed
+        for player in self.player_list:
+            player.read_briscola_card(briscola_card)
         # put the card at the bottom of the deck
         self.game_deck.append_card(briscola_card)
         logging.debug("SETUP GAME - briscola is: "+self.briscola_suit+" deck size: "+str(self.game_deck.deck_size()))
@@ -47,7 +50,7 @@ class game2player:
                 if self.game_deck.deck_size() > 0:
                     new_card = self.game_deck.draw_card()
                     player.draw_card(new_card)
-            played_card = player.play_rnd_card(card_trick)
+            played_card = player.play_card(card_trick)
             card_trick.append(played_card)
             # print the cards
             logging.debug("Player_"+str(player.player_id)+" plays")
